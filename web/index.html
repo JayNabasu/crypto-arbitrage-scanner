@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantitative Triangular Arbitrage Engine | Jerry A. Nabasu</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glow-bg"></div>
+
+    <header>
+        <div class="brand">
+            <span class="badge">HFT QUANT LAB</span>
+            <h1>Bellman-Ford Triangular Arbitrage Scanner</h1>
+            <p class="subtitle">Sub-millisecond Negative Cycle Detection across High-Frequency Cross-Currency Orderbooks</p>
+        </div>
+        <div class="header-actions">
+            <div class="live-pill" id="livePill">
+                <span class="dot"></span>
+                <span>ENGINE POLLING (1s)</span>
+            </div>
+            <button id="togglePollingBtn" class="btn btn-secondary">Pause Feed</button>
+            <button id="manualScanBtn" class="btn btn-primary">Scan Tick</button>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- Telemetry Metrics -->
+        <section class="metrics-row">
+            <div class="card metric-card">
+                <div class="metric-label">Execution Latency</div>
+                <div class="metric-val" id="latencyVal">0.12 ms</div>
+                <div class="metric-sub">Bellman-Ford Directed Graph</div>
+            </div>
+            <div class="card metric-card">
+                <div class="metric-label">Currencies / Pairs</div>
+                <div class="metric-val" id="pairsVal">5 / 16</div>
+                <div class="metric-sub">USDT, BTC, ETH, SOL, BNB</div>
+            </div>
+            <div class="card metric-card">
+                <div class="metric-label">Taker Fee per Leg</div>
+                <div class="metric-val text-accent" id="feeDisplay">0.075%</div>
+                <div class="metric-sub">Binance / OKX VIP0 Model</div>
+            </div>
+            <div class="card metric-card">
+                <div class="metric-label">Detected Opportunities</div>
+                <div class="metric-val text-green" id="oppCountVal">0</div>
+                <div class="metric-sub">Net Profit > 0.05%</div>
+            </div>
+        </section>
+
+        <!-- Main Content split -->
+        <div class="two-col-layout">
+            <!-- Left: Active Negative Cycles / Arbitrage Opportunities -->
+            <section class="card opps-panel">
+                <div class="panel-header">
+                    <h2>Live Arbitrage Execution Windows</h2>
+                    <span class="badge badge-green">Compounded Cycle ROI</span>
+                </div>
+                <div id="oppsContainer" class="opps-container">
+                    <div class="placeholder-text">Polling orderbook feed for negative weight cycles...</div>
+                </div>
+            </section>
+
+            <!-- Right: Cross-Rate Orderbook Matrix & Controls -->
+            <section class="card matrix-panel">
+                <div class="panel-header">
+                    <h2>Live Cross-Rate Matrix</h2>
+                    <span class="badge badge-blue">Tick Feed</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="rates-table" id="ratesTable">
+                        <thead>
+                            <tr>
+                                <th>From \ To</th>
+                                <th>USDT</th>
+                                <th>BTC</th>
+                                <th>ETH</th>
+                                <th>SOL</th>
+                                <th>BNB</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ratesTbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="math-explainer">
+                    <h3>Mathematical Formulation</h3>
+                    <p class="formula-box">
+                        $$\text{Weight } w(u, v) = -\ln\Big(\text{Rate}(u, v) \cdot (1 - \text{Fee})\Big)$$
+                    </p>
+                    <p class="formula-desc">
+                        A cycle with \(\sum w(u, v) &lt; 0\) corresponds directly to a compounded product of yields \(&gt; 1.0\), guaranteeing risk-free atomic execution profit after all exchange fees.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>Built with Python, FastAPI, and Bellman-Ford Negative Cycle Detection by <a href="https://github.com/JayNabasu" target="_blank">Jerry A. Nabasu (@JayNabasu)</a></p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
